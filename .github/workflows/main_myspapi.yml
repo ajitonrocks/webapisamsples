@@ -22,7 +22,7 @@ jobs:
     - name: Log in to registry
       uses: docker/login-action@v1
       with:
-        registry:  ${{ secrets.CONTAINERREGISTRYURL }}
+        registry:  https://${{ secrets.CONTAINERREGISTRYSERVER }}
         username: ${{ secrets.CONTAINERUSERNAME }}
         password: ${{ secrets.CONTAINERPASSWORD }}
 
@@ -30,7 +30,7 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         push: true
-        tags: mynodeapicontainerregistry.azurecr.io/${{ secrets.CONTAINERUSERNAME }}/myapi:${{ github.sha }}
+        tags: ${{ secrets.CONTAINERREGISTRYSERVER }}/${{ secrets.CONTAINERUSERNAME }}/myapi:${{ github.sha }}
         file: ./Dockerfile
 
 #  deploy:
