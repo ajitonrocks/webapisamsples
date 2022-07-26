@@ -22,30 +22,30 @@ jobs:
     - name: Log in to registry
       uses: docker/login-action@v1
       with:
-        registry: https://mynodeapicontainerregistry.azurecr.io/
-        username: ${{ secrets.AzureAppService_ContainerUsername_04f6b7aadb184525830e29070c100f0e }}
-        password: ${{ secrets.AzureAppService_ContainerPassword_4a22e1ed09fb4479aa4dd36e8312c5ff }}
+        registry:  ${{ secrets.CONTAINERREGISTRYURL }}
+        username: ${{ secrets.CONTAINERUSERNAME }}
+        password: ${{ secrets.CONTAINERPASSWORD }}
 
     - name: Build and push container image to registry
       uses: docker/build-push-action@v2
       with:
         push: true
-        tags: mynodeapicontainerregistry.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_04f6b7aadb184525830e29070c100f0e }}/myapi:${{ github.sha }}
+        tags: mynodeapicontainerregistry.azurecr.io/${{ secrets.CONTAINERUSERNAME }}/myapi:${{ github.sha }}
         file: ./Dockerfile
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    environment:
-      name: 'production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+#  deploy:
+#    runs-on: ubuntu-latest
+#    needs: build
+#    environment:
+#      name: 'production'
+#      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
-    steps:
-    - name: Deploy to Azure Web App
-      id: deploy-to-webapp
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: 'myspapi'
-        slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_2facf702b6434e8f94641fe4c9befe3c }}
-        images: 'mynodeapicontainerregistry.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_04f6b7aadb184525830e29070c100f0e }}/myapi:${{ github.sha }}'
+#    steps:
+#    - name: Deploy to Azure Web App
+#      id: deploy-to-webapp
+#      uses: azure/webapps-deploy@v2
+#      with:
+#        app-name: 'myspapi'
+#        slot-name: 'production'
+#        publish-profile: ${{ secrets.AzureAppService_PublishProfile_2facf702b6434e8f94641fe4c9befe3c }}
+#        images: 'mynodeapicontainerregistry.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_04f6b7aadb184525830e29070c100f0e }}/myapi:${{ github.sha }}'
