@@ -15,7 +15,7 @@ jobs:
           echo "::add-secret::SSH_PRIVATE_KEY=$(cat ssh_key)"
       
       - name: Display public key
-        run: each ${{ steps.generate-ssh-key.outputs.public_key }}
+        run: echo ${{ steps.generate-ssh-key.outputs.public_key }}
       
       - uses: gliech/create-github-secret-action@v1
         with:
