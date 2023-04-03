@@ -11,13 +11,13 @@ jobs:
       - name: Generate SSH Key
         run: |
           ssh-keygen -t rsa -b 4096 -C "shekhawatajit@hotmail.com" -f ssh_key -q -N ""
-          cat id_rsa.pub
+          cat ssh_key.pub
         id: ssh-key
 
       - name: Store private key as GitHub secret
         run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > id_rsa
-          chmod 600 id_rsa
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ssh_key
+          chmod 600 ssh_key
         shell: bash
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
