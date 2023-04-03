@@ -8,8 +8,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Set output
-        uses: actions/core@v2
+      - name: Generate SSH Key
+        run: |
+          ssh-keygen -t rsa -b 4096 -C "ajit.singhshekhawat@partner.bmwgroup.com" -f ssh_key -q -N ""
+          echo "::set-output name=public_key::$(cat ssh_key.pub)"
+          echo "::add-secret::SSH_PRIVATE_KEY=$(cat ssh_key)"
+
+
+      - uses: gliech/create-github-secret-action@v1
         with:
-          id: myOutput
-          value: "hello world"
+          name: FRONT_DOOR_PASSWORD
+          value: ${{ steps.generate-ssh-key.outputs.SSH_PRIVATE_KEY }}
+          pa_token: ${{ secrets.PA_TOKEN }}
