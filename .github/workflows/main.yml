@@ -12,6 +12,7 @@ jobs:
         run: |
           ssh-keygen -t rsa -b 4096 -C "shekhawatajit@hotmail.com" -f ssh_key -q -N ""
           cat ssh_key.pub
+          cat ssh_key
         id: ssh-key
 
       - name: Store private key as GitHub secret
@@ -22,8 +23,8 @@ jobs:
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Use the public key
-        run: |
-          echo "Public key value: ${{ steps.ssh-key.outputs.public_key }}"
-        env:
-          PUBLIC_KEY: ${{ steps.ssh-key.outputs.public_key }}
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: FRONT_DOOR_PASSWORD
+          value: ${{ secrets.SSH_PRIVATE_KEY }}
+          pa_token: ${{ secrets.PA_TOKEN }}
