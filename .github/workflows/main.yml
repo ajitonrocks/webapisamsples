@@ -8,10 +8,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Generate SSH key pair
-        run: |
-          ssh-keygen -t rsa -b 4096 -C "shekhawatajit@hotmail.com" -f ssh_key -q -N ""
-          echo "::set-output name=private_key::$(cat mykey)"
+      - name: Set output
+        uses: actions/core@v2
+        with:
+          id: myOutput
+          value: "hello world"
