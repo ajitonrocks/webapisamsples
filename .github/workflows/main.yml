@@ -15,9 +15,3 @@ jobs:
         run: |
           ssh-keygen -t rsa -b 4096 -C "shekhawatajit@hotmail.com" -f ssh_key -q -N ""
           echo "::set-output name=private_key::$(cat mykey)"
-
-      - name: Save private key to GitHub secret
-        uses: actions/core@v2
-        with:
-          secret: SSH_PRIVATE_KEY
-          value: ${{ steps.generate-ssh-key.outputs.private_key }}
