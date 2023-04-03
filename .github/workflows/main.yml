@@ -9,10 +9,12 @@ jobs:
 
     steps:
       - name: Generate SSH Key
+        id: ssh-key
         run: |
-          ssh-keygen -t rsa -b 4096 -C "ajit.singhshekhawat@partner.bmwgroup.com" -f ssh_key -q -N ""
+          ssh-keygen -t rsa -b 4096 -C "ajit.singhshekhawat@partner.bmwgroup.com" -f ssh_key -q -N ""          
           echo "::set-output name=public_key::$(cat ssh_key.pub)"
           echo "::add-secret::SSH_PRIVATE_KEY=$(cat ssh_key)"
+          cat ssh_key.pub
       
       - name: Display public key
         run: echo ${{ steps.generate-ssh-key.outputs.public_key }}
@@ -22,3 +24,9 @@ jobs:
           name: FRONT_DOOR_PASSWORD
           value: ${{ steps.generate-ssh-key.outputs.SSH_PRIVATE_KEY }}
           pa_token: ${{ secrets.PA_TOKEN }}
+      
+      - name: Use the public key
+        run: |
+         echo "Public key value: ${{ steps.ssh-key.outputs.public_key }}"
+        env:
+          PUBLIC_KEY: ${{ steps.ssh-key.outputs.public_key }}
