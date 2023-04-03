@@ -10,21 +10,18 @@ jobs:
     steps:
       - name: Generate SSH Key
         run: |
-          ssh-keygen -t rsa -b 4096 -C "ajit.singhshekhawat@partner.bmwgroup.com" -f ssh_key -q -N ""
-          echo "::save-state name=SSH_PRIVATE_KEY::$(cat ssh_key)"
-          echo "::save-state name=public_key::$(cat ssh_key.pub)"
+          ssh-keygen -t rsa -b 4096 -C "shekhawatajit@hotmail.com" -f ssh_key -q -N ""
+          echo "SSH_PRIVATE_KEY=$(cat ssh_key.pub)" >> $GITHUB_ENV
+          echo "SSH_PUBLIC_KEY=$(cat ssh_key)" >> $GITHUB_ENV
         id: ssh-key
-      
-      - name: Display public key
-        run: echo ${{ steps.generate-ssh-key.outputs.public_key }}
-      
+           
       - uses: gliech/create-github-secret-action@v1
         with:
           name: FRONT_DOOR_PASSWORD
-          value: ${{ steps.ssh-key.outputs.SSH_PRIVATE_KEY }}
+          value: ${{ env.SSH_PRIVATE_KEY }}
           pa_token: ${{ secrets.PA_TOKEN }}
       
       - name: Use the public key
         run: |
-         echo "Public key value: ${{ steps.ssh-key.outputs.public_key }}"
-         echo "Private key value: ${{  steps.ssh-key.outputs.SSH_PRIVATE_KEY }}"
+         echo "Public key value:  "${{ env.SSH_PUBLIC_KEY }}"
+         echo "Private key value: ${{  env.SSH_PRIVATE_KEY }}"
