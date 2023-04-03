@@ -9,11 +9,11 @@ jobs:
 
     steps:
       - name: Generate SSH Key
-        id: ssh-key
         run: |
-          ssh-keygen -t rsa -b 4096 -C "ajit.singhshekhawat@partner.bmwgroup.com" -f ssh_key -q -N ""          
+          ssh-keygen -t rsa -b 4096 -C "ajit.singhshekhawat@partner.bmwgroup.com" -f ssh_key -q -N ""
+          echo "::save-state name=SSH_PRIVATE_KEY::$(cat ssh_key)"
           echo "::save-state name=public_key::$(cat ssh_key.pub)"
-          echo "::save-state name=SSH_PRIVATE_KEY=$(cat ssh_key)"
+        id: ssh-key
       
       - name: Display public key
         run: echo ${{ steps.generate-ssh-key.outputs.public_key }}
